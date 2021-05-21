@@ -25,6 +25,7 @@ const RegistrationPage = () => {
     const [identificationDocumentNo, setIdentificationDocumentNo] = useState()
     const [identificationProofType, setIdentificationProofType] = useState()
     const [depositAmount, setDepositAmount] = useState(0);
+    const [registrationDate, setRegistrationDate] = useState(new Date());
 
 
 
@@ -123,7 +124,7 @@ const RegistrationPage = () => {
                         </div>
 
                         {/**13 */}
-                        <label></label>
+                        <label htmlFor="contact">Contact</label>
                         <input
                             type="number"
                             className="form-control"
@@ -142,22 +143,32 @@ const RegistrationPage = () => {
                 {
 
                     <Fragment>
-                        {/* guardian type 4 */}
-                        <label htmlFor="guardian-type">Guardian Type</label>
-                        <select name="guardian-type" id="guardian-type" onChange={(e) => setGuardianType(e.target.value)}>
-                            <option value="local" selected={(guardianType === 'local')}>Option 1</option>
-                            <option value="parental" selected={(guardianType === 'parental')}>Option 2</option>
-                        </select>
 
-                        {/**5 */}
-                        <label htmlFor=""></label>
-                        <input type="text"
-                            name="guardian-name"
-                            defaultValue={guardianName}
-                            onChange={(e) => { setGuardianName(e.target.value) }}
-                            className="form-control"
-                            placeholder="Enter Your Guardian Name"
-                            name="guardian-name" required />
+                        <div className="row">
+                            <div className="col-md-6">
+                                {/* guardian type 4 */}
+                                <label htmlFor="guardian-type">Guardian Type</label>
+                                <select name="guardian-type" id="guardian-type" onChange={(e) => setGuardianType(e.target.value)}>
+                                    <option value="local" selected={(guardianType === 'local')}>Option 1</option>
+                                    <option value="parental" selected={(guardianType === 'parental')}>Option 2</option>
+                                </select>
+                            </div>
+
+                            <div className="col-md-6">
+                                {/**5 */}
+                                <label htmlFor="guardian-name">Guardian Name</label>
+                                <input type="text"
+                                    name="guardian-name"
+                                    defaultValue={guardianName}
+                                    onChange={(e) => { setGuardianName(e.target.value) }}
+                                    className="form-control"
+                                    placeholder="Enter Your Guardian Name"
+                                    required />
+                            </div>
+                        </div>
+
+
+
 
                         {/**6 */}
                         <label htmlFor="address">Address</label>
@@ -167,7 +178,7 @@ const RegistrationPage = () => {
                             onChange={(e) => setAddressInput(e.target.value)}
                             className="form-control"
                             placeholder="Enter Your Full Address with PinCode"
-                            name="address" required />
+                            required />
 
                         {/**7 */}
                         <label htmlFor="citizenship"></label>
@@ -180,36 +191,34 @@ const RegistrationPage = () => {
                             name="citizenship" required />
 
                         <div className="row">
-                            <label htmlFor="country-name">Country</label>
-                            {/**9 */}
-                            <select name="country-name" required onChange={(e) => setCountryInput(e.target.value)}>
-                                <option value="india" selected={(countryInput === 'india')}>India</option>
-                                <option value="spain" selected={(countryInput === 'spain')}>Spain</option>
-                            </select>
+                            <div className="col-md-6">
+                                <label htmlFor="country-name">Country</label>
+                                {/**9 */}
+                                <select name="country-name" required onChange={(e) => setCountryInput(e.target.value)}>
+                                    <option value="india" selected={(countryInput === 'india')}>India</option>
+                                    <option value="spain" selected={(countryInput === 'spain')}>Spain</option>
+                                </select>
+                            </div>
+                            <div className="col-md-6">
+                                {/** 8  ,state dropdown based on country */}
+                                <label htmlFor="states">State</label>
+                                <select name="states" id="states" onChange={(e) => setCustomerState(e.target.value)}>
+
+                                    {
+                                        (countryInput === 'india') &&
+                                        <Fragment>
+                                            {indianStates.map((state, index) => <option value={index} selected={(customerState === state)}>{state}</option>)}
+                                        </Fragment>
+                                    }
+                                    {
+                                        (countryInput === 'spain') &&
+                                        <Fragment>
+                                            {spainStates.map((state, index) => <option value={index} selected={(customerState === state)}>{state}</option>)}
+                                        </Fragment>
+                                    }
+                                </select>
+                            </div>
                         </div>
-
-                        <div className="row">
-
-                            {/**8 */}
-                            {/**state dropdown based on country */}
-                            <label htmlFor="states">State</label>
-                            <select name="states" id="states" onChange={(e) => setCustomerState(e.target.value)}>
-
-                                {
-                                    (countryInput === 'india') &&
-                                    <Fragment>
-                                        {indianStates.map((state, index) => <option value={index} selected={(customerState === state)}>{state}</option>)}
-                                    </Fragment>
-                                }
-                                {
-                                    (countryInput === 'spain') &&
-                                    <Fragment>
-                                        {spainStates.map((state, index) => <option value={index} selected={(customerState === state)}>{state}</option>)}
-                                    </Fragment>
-                                }
-                            </select>
-                        </div>
-
 
 
                         {/**18  */}
@@ -229,11 +238,15 @@ const RegistrationPage = () => {
                     <Fragment>
                         <div className="row">
                             <div className="col-md-6">
-                                
+
                                 {/* 15 Registration Date- Represents the customer registration Date 
                          which is automatically populated from the system current date  */}
                                 <label htmlFor="registration-date">Registration Date</label>
-                                <input defaultValue={currentDate} className="form-control" type="date" onBlur={checkDate}
+                                <input
+                                    defaultValue={registrationDate}
+                                    onChange={(e) => setRegistrationDate(e.target.value)}
+                                    className="form-control"
+                                    type="date" onBlur={checkDate}
                                     name="registration-date" required />
 
                             </div>
@@ -241,7 +254,11 @@ const RegistrationPage = () => {
                                 <label htmlFor="account-type">Account Type</label><br></br>
                                 {/** 16 , account type options=salary/savings*/}
                                 <select name="account-type" id="account-type"
-                                    onChange={(e) => { setAccountType(e.target.value); setDepositAmount((accountType === 'savaings') ? 5000 : 0); }}>
+                                    onChange={(e) => {
+                                        setAccountType(e.target.value);
+                                        setDepositAmount((accountType === 'savaings') ? 5000 : 0);
+                                    }}>
+
                                     <option value="savings" selected={(accountType === 'savings')}>Savings</option>
                                     <option value="salary" selected={(accountType === 'salary')}>Salary</option>
                                 </select>
@@ -252,47 +269,71 @@ const RegistrationPage = () => {
 
 
                         {/**17 ,  */}
+                        <label htmlFor="branch-name">Branch Name</label>
                         <input
+                            type="text"
+                            name="branch-name"
                             default={branchNameInput}
-                            className="form-control" type="text"
+                            onChange={(e) => setBranchName(e.target.value)}
+                            className="form-control"
                             placeholder="Enter Your Branch Name" required />
 
                         {/**19 */}{/**set it according to account type */}
+                        <label htmlFor="initial-deposit">Initial Deposit</label>
                         <input
+                            type="number"
+                            name="initial-deposit"
                             defaultValue={depositAmount}
-                            className="form-control" type="number"
+                            onChange={(e)=>setDepositAmount(e.target.value)}
+                            className="form-control"
                             placeholder="Enter Your Initial Deposit Amount"
                             required />
 
                         {/**20 */}
+                        <label htmlFor="identification-proof-type">Identification Proof Type</label>
                         <input
+                            type="text"
+                            name="identification-proof-type"
                             default={identificationProofType}
+                            onChange={(e)=>setIdentificationProofType(e.target.value)}
                             className="form-control"
                             placeholder="Enter Your Identification Proof Type"
-                            name="proof-type" required />
-                        {/**21 */}
+                            required />
 
+
+                        {/**21 */}
+                        <label htmlFor="identification-document-no">Identification Document No </label>
                         <input
                             default={identificationDocumentNo}
+                            onChange={(e)=>setIdentificationDocumentNo(e.target.value)}
                             className="form-control"
-                            type="text" placeholder="Identification Document No."
-                            name="identification-document-no"></input>
+                            type="text" 
+                            placeholder="Identification Document No."
+                            name="identification-document-no"> 
+                            </input>
 
+                        <label htmlFor="reference-acc-holder-name">Reference Account Holder Name</label>
                         <input
                             default={referenceAccHolderName}
+                            onChange={(e)=>setReferenceAccHolderName(e.target.value)}
                             className="form-control"
                             type="text"
                             placeholder="Enter Reference account holder name"
                             name="reference-acc-holder-name" required />
+
+                        <label htmlFor="reference-acc-no">Reference Account Holder Account Number</label>
                         <input
                             default={referenceAccNumber}
+                            onChange={(e)=>setReferenceAccNumber(e.target.value)}
                             className="form-control"
                             type="number"
                             placeholder="Enter Reference account holder acc. No."
-                            name="reference-acc-no." required />
+                            name="reference-acc-no" required />
 
+                        <label htmlFor="reference-acc-address">Reference Account Holder Address</label>
                         <input
                             default={referenceAccHolderAddress}
+                            onChange={(e)=>setReferenceAccHolderAddress(e.target.value)}
                             className="form-control"
                             type="text"
                             placeholder="Enter Reference account holder address"
