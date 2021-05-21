@@ -132,7 +132,6 @@ const RegistrationPage = () => {
                             onChange={(e) => { setContactInput(e.target.value) }}
                             name="contact"
                             minLength="10"
-                            maxLength="10"
                             placeholder="Enter Your Contact Number"
                             id="contact" required />
 
@@ -189,7 +188,7 @@ const RegistrationPage = () => {
                             onChange={(e) => { setCitizenshipInput(e.target.value) }}
                             className="form-control"
                             placeholder="Enter Your Citizenship"
-                            name="citizenship" required />
+                            required />
 
                         <div className="row">
                             <div className="col-md-6">
@@ -208,13 +207,13 @@ const RegistrationPage = () => {
                                     {
                                         (countryInput === 'india') &&
                                         <Fragment>
-                                            {indianStates.map((state, index) => <option value={index} selected={(customerState === state)}>{state}</option>)}
+                                            {indianStates.map((state, index) => <option key={index} value={index} selected={(customerState === state)}>{state}</option>)}
                                         </Fragment>
                                     }
                                     {
                                         (countryInput === 'spain') &&
                                         <Fragment>
-                                            {spainStates.map((state, index) => <option value={index} selected={(customerState === state)}>{state}</option>)}
+                                            {spainStates.map((state, index) => <option key={index} value={index} selected={(customerState === state)}>{state}</option>)}
                                         </Fragment>
                                     }
                                 </select>
@@ -230,7 +229,7 @@ const RegistrationPage = () => {
                             onChange={(e) => setCitizenshipStatus(e.target.value)}
                             className="form-control"
                             placeholder="Enter Your Citizen Status"
-                            name="citizenship-status" required />
+                            required />
                     </Fragment>
                 }
 
