@@ -1,10 +1,11 @@
 import './App.css';
-import {Button,Grid} from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import {Route} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import RegistrationPage from './pages/RegistrationPage';
+import Main from './components/layout/Main';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     textAlign: 'center',
     color: "red",
-    backgroundColor:"blue",
+    backgroundColor: "blue",
   },
 }));
 
@@ -21,9 +22,13 @@ function App() {
   const classes = useStyles();
   return (
     <div className="App">
-        <Route path="/">
+      <Main>
+        <Switch>
+          <Route path="/">
             <RegistrationPage></RegistrationPage>
-        </Route>
+          </Route>
+        </Switch>
+      </Main>
     </div>
   );
 }

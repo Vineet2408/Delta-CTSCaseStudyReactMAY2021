@@ -148,6 +148,7 @@ const RegistrationPage = () => {
                             <div className="col-md-6">
                                 {/* guardian type 4 */}
                                 <label htmlFor="guardian-type">Guardian Type</label>
+                                <br></br>
                                 <select name="guardian-type" id="guardian-type" onChange={(e) => setGuardianType(e.target.value)}>
                                     <option value="local" selected={(guardianType === 'local')}>Option 1</option>
                                     <option value="parental" selected={(guardianType === 'parental')}>Option 2</option>
