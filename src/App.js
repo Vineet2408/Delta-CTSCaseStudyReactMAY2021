@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { Route, Switch } from 'react-router-dom';
 import RegistrationPage from './pages/RegistrationPage';
 import Main from './components/layout/Main';
+import RegistrationSuccessful from './pages/RegistrationSuccessful';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -24,8 +25,11 @@ function App() {
     <div className="App">
       <Main>
         <Switch>
-          <Route path="/">
+          <Route exact path="/">
             <RegistrationPage></RegistrationPage>
+          </Route>
+          <Route path="/rs">
+            <RegistrationSuccessful></RegistrationSuccessful>
           </Route>
         </Switch>
       </Main>

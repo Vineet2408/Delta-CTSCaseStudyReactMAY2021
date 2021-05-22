@@ -1,6 +1,9 @@
 import React, { Fragment, useState } from 'react'
+import { useHistory } from 'react-router-dom';
 
 const RegistrationPage = () => {
+
+    const history = useHistory();
 
     const [nameInput, setNameInput] = useState();
     const [emailInput, setEmailInput] = useState();
@@ -127,6 +130,7 @@ const RegistrationPage = () => {
         }
 
         console.log(customer);
+        history.push('/rs');
     }
 
     const checkDate = (event) => {
