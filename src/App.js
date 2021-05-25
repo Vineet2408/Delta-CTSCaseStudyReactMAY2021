@@ -7,6 +7,13 @@ import { Route, Switch } from 'react-router-dom';
 import RegistrationPage from './pages/RegistrationPage';
 import Main from './components/layout/Main';
 import RegistrationSuccessful from './pages/RegistrationSuccessful';
+import LoginPage from './pages/LoginPage';
+import CustomerProfile from './pages/CustomerProfile'
+import ApplyLoanPage from './pages/ApplyLoanPage';
+import UpdateCustomerDetailsPage from './pages/UpdateCustomerDetailsPage';
+import Home from './pages/Home';
+import LogoutPage from './pages/LogoutPage';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -22,14 +29,32 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   return (
-    <div className="App">
+    <div className="container-fluid mt-5">
       <Main>
         <Switch>
           <Route exact path="/">
+            <Home></Home>
+          </Route>
+          <Route exact path="/register">
             <RegistrationPage></RegistrationPage>
+          </Route>
+          <Route exact path="/login">
+            <LoginPage></LoginPage>
+          </Route>
+          <Route path="/profile">
+            <CustomerProfile></CustomerProfile>
           </Route>
           <Route path="/rs">
             <RegistrationSuccessful></RegistrationSuccessful>
+          </Route>
+          <Route path="/applyLoan">
+            <ApplyLoanPage></ApplyLoanPage>
+          </Route>
+          <Route path="/updateProfile">
+            <UpdateCustomerDetailsPage></UpdateCustomerDetailsPage>
+          </Route>
+          <Route exact path="/logout">
+            <LogoutPage></LogoutPage>
           </Route>
         </Switch>
       </Main>

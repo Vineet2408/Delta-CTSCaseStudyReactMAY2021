@@ -5,7 +5,7 @@ const Main = (props) => {
     return (
        <Fragment>
             <Header></Header>
-            <div>
+            <div className="container-fluid main">
                 {props.children}
             </div>
             <Footer></Footer>

@@ -32,3 +32,24 @@ label{
 button{
   margin: 5px;
 }
+
+.loginCon{
+  margin-top: 120px;
+}
+.main{
+  margin-top: 80px !important;
+  border-radius: 5px !important;
+  
+}
+.homeCon{
+  padding: 30px !important;
+  border-radius: 5px !important;
+}
+img{
+  border-radius: 5px !important;
+}
+li{
+  padding: 5px !important;
+  border-radius: 5px !important;
+  margin-bottom: 10px;
+}

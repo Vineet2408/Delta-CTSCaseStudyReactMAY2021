@@ -1,7 +1,8 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
+import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-
-const RegistrationPage = () => {
+import { registerUser } from '../store/services/userService';
+const RegistrationPage = (props) => {
 
     const history = useHistory();
 
@@ -9,7 +10,7 @@ const RegistrationPage = () => {
     const [emailInput, setEmailInput] = useState();
     const [usernameInput, setUsernameInput] = useState();
     const [passwordInput, setPasswordInput] = useState();
-    const [countryInput, setCountryInput] = useState();
+    const [countryInput, setCountryInput] = useState('india');
     const [accountType, setAccountType] = useState();
     const [gender, setGender] = useState();
     const [dob, setDob] = useState();
@@ -27,21 +28,40 @@ const RegistrationPage = () => {
     const [referenceAccHolderName, setReferenceAccHolderName] = useState()
     const [identificationDocumentNo, setIdentificationDocumentNo] = useState()
     const [identificationProofType, setIdentificationProofType] = useState()
-    const [depositAmount, setDepositAmount] = useState(0);
+    const [depositAmount, setDepositAmount] = useState(5000);
     const [registrationDate, setRegistrationDate] = useState(new Date());
     const [ageInput, setAgeInput] = useState();
-    const [isFormValid, setFormValid] = useState(false);
+    const [regId, setRegId] = useState();
+    const [accountNo, setAccountNo] = useState();
 
+    const generate = (n) => {
+        var add = 1, max = 12 - add;   // 12 is the min safe number Math.random() can generate without it starting to pad the end with zeros.   
 
+        if (n > max) {
+            return generate(max) + generate(n - max);
+        }
+
+        max = Math.pow(10, n + add);
+        var min = max / 10; // Math.pow(10, n) basically
+        var number = Math.floor(Math.random() * (max - min + 1)) + min;
+
+        return ("" + number).substring(add);
+    }
+
+    useEffect(async () => {
+        await setRegId(generate(9));
+        await setAccountNo(generate(16));
+        console.log('regId : ', regId);
+        console.log('account No : ', accountNo);
+    }, [])
 
     let indianStates = ["Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli", "Daman and Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", "Kerala", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Orissa", "Pondicherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Tripura", "Uttaranchal", "Uttar Pradesh", "West Bengal"];
     let spainStates = ["Barcelona", "Madrid", "Sevilla", "Malaga", "Cadiz", "Zaragoza", "Granada", "Valencia", "Cordoba", "Girona", "Almeria", "Toledo"];
 
 
-    const formHandler = (event) => {
+    const formHandler = async (event) => {
         event.preventDefault();
         let nameRegex = /^[a-zA-Z\s]*$/;
-        let e = event.target.elements;
         if (nameInput.trim() === '' || !nameRegex.test(nameInput)) {
             document.getElementById("nameWarning").style.display = "block";
             document.getElementById("nameWarning").innerHTML = "Incorrect name!!! It should only contain letters and spaces";
@@ -71,7 +91,7 @@ const RegistrationPage = () => {
         }
         if (contactInput.trim().length !== 10) {
             document.getElementById("contactWarning").style.display = "block";
-            document.getElementById("contactWarning").innerHTML =contactInput.trim().length+ " Incorrect contact !!! Length must be exact 10";
+            document.getElementById("contactWarning").innerHTML = contactInput.trim().length + " Incorrect contact !!! Length must be exact 10";
             return;
         }
         else {
@@ -89,15 +109,23 @@ const RegistrationPage = () => {
             document.getElementById("documentNumber").style.display = "none";
         }
 
-        if(ageInput < 18 || ageInput >96)
-        {
+        if (ageInput < 18 || ageInput > 96) {
             document.getElementById("ageWarning").style.display = "block";
             document.getElementById("ageWarning").innerHTML = "Invalid Age  !!! It should be greater than 17 and less than 96";
             return;
         }
-        else
-        {
+        else {
             document.getElementById("ageWarning").style.display = "none";
+        }
+
+        if (ageInput < 18) {
+            await setCitizenshipStatus("Minor");
+        }
+        if (ageInput <= 60 && ageInput > 18) {
+            await setCitizenshipStatus("Normal");
+        }
+        if (ageInput > 60) {
+            await setCitizenshipStatus("Senior");
         }
 
         let customer = {
@@ -125,22 +153,45 @@ const RegistrationPage = () => {
             identificationDocumentNo: identificationDocumentNo,
             referenceAccHolderName: referenceAccHolderName,
             referenceAccNumber: referenceAccNumber,
-            referenceAccHolderAddress: referenceAccHolderAddress
+            referenceAccHolderAddress: referenceAccHolderAddress,
+            accountNo: accountNo,
+            regId: regId
 
         }
 
         console.log(customer);
-        history.push('/rs');
+
+        props.dispatch(registerUser(customer));
+        history.push('/login');
     }
 
-    const checkDate = (event) => {
-        console.log(event.target.value);
+    const checkDate = (e) => {
+        console.log(e.target.value);
+
+        let curr = new Date();
+        curr.setDate(curr.getDate() + 0);
+        let date = curr.toISOString().substr(0, 10);
+        console.log(new Date(e.target.value).getTime(), " ", new Date(date).getTime());
+        console.log('diff = ', new Date(e.target.value) - new Date(date).getTime())
+        if (new Date(e.target.value) - new Date(date).getTime() > 0) {
+            document.getElementById("ageWarning").style.display = "block";
+            document.getElementById("ageWarning").style.background = "yellow";
+            document.getElementById("ageWarning").innerHTML = "Date is Not correct";
+            document.getElementById("submitBtn").disabled = true;
+        }
+        else {
+            document.getElementById("ageWarning").style.display = "none";
+            document.getElementById("submitBtn").disabled = false;
+        }
+
+
     }
 
     let currentDate = new Date();
 
     return (
         <div className="container mt-5">
+            <p>Registration Id : {regId} </p>
             <form onSubmit={formHandler} className="form-group">
                 {
                     <Fragment>
@@ -206,10 +257,19 @@ const RegistrationPage = () => {
                                         let yearAge = ageDiff.getUTCFullYear();
                                         let age = Math.abs(yearAge - 1970);
                                         setAgeInput(age);
+                                        if (age < 18) {
+                                             setCitizenshipStatus("Minor");
+                                        }
+                                        if (age <= 60 && ageInput > 18) {
+                                             setCitizenshipStatus("Normal");
+                                        }
+                                        if (age > 60) {
+                                             setCitizenshipStatus("Senior");
+                                        }
                                     }}
                                     onBlur={checkDate}
                                     required />
-                                    <p className="text-danger" id= "ageWarning"></p>
+                                <p className="text-danger" id="ageWarning"></p>
                             </div>
                             <p className="text-danger" id="dobWarning"></p>
                             <div className="col-md-4">
@@ -329,15 +389,8 @@ const RegistrationPage = () => {
 
 
                         {/**18  */}
-                        <label htmlFor="citizenship-status">Citizenship Status</label>
-                        <input
-                            type="text"
-                            name="citizenship-status"
-                            defaultValue={citizenshipStatus}
-                            onChange={(e) => setCitizenshipStatus(e.target.value)}
-                            className="form-control"
-                            placeholder="Enter Your Citizen Status"
-                            required />
+                       <br></br>
+                       <hr></hr>
                     </Fragment>
                 }
 
@@ -351,22 +404,50 @@ const RegistrationPage = () => {
                                 <label htmlFor="registration-date">Registration Date</label>
                                 <input
                                     defaultValue={registrationDate}
-                                    onChange={(e) => setRegistrationDate(e.target.value)}
+                                    onChange={(e) => {
+                                        let curr = new Date();
+                                        curr.setDate(curr.getDate() + 1);
+                                        let date = curr.toISOString().substr(0, 10);
+                                        console.log(new Date(e.target.value).getTime(), " ", new Date(date).getTime());
+                                        console.log('diff = ', new Date(e.target.value) - new Date(date).getTime())
+                                        if (new Date(e.target.value) - new Date(date).getTime() < 0) {
+                                            document.getElementById("dateWarning").style.display = "block";
+                                            document.getElementById("dateWarning").style.background = "yellow";
+                                            document.getElementById("dateWarning").innerHTML = "Date is Not correct";
+                                            document.getElementById("submitBtn").disabled = true;
+                                        }
+                                        else {
+                                            document.getElementById("dateWarning").style.display = "none";
+                                            document.getElementById("submitBtn").disabled = false;
+                                        }
+
+                                        setRegistrationDate(e.target.value)
+                                    }
+                                    }
                                     className="form-control"
                                     type="date"
                                     onBlur={checkDate}
                                     name="registration-date"
-                                    value={registrationDate}
                                     required />
+                                <br></br>
+                                <p id="dateWarning" className="text-danger"></p>
 
                             </div>
                             <div className="col-md-6">
                                 <label htmlFor="account-type">Account Type</label><br></br>
                                 {/** 16 , account type options=salary/savings*/}
                                 <select name="account-type" id="account-type"
-                                    onChange={(e) => {
-                                        setAccountType(e.target.value);
-                                        setDepositAmount((accountType === 'savaings') ? 5000 : 0);
+                                    onChange={async (e) => {
+                                        await setAccountType(e.target.value);
+                                        if(e.target.value==="savings")
+                                        {
+                                           await setDepositAmount(5000);
+                                        }
+                                        else
+                                        {
+                                           await setDepositAmount(0);
+                                        }
+                                        
                                     }}>
 
                                     <option value="savings" selected={(accountType === 'savings')}>Savings</option>
@@ -388,23 +469,13 @@ const RegistrationPage = () => {
                             required />
 
                         {/**19 */}{/**set it according to account type */}
-                        <label htmlFor="initial-deposit">Initial Deposit</label>
-                        <input
-                            type="number"
-                            name="initial-deposit"
-                            defaultValue={depositAmount}
-                            onChange={(e) => setDepositAmount(e.target.value)}
-                            className="form-control"
-                            placeholder="Enter Your Initial Deposit Amount"
-                            value={depositAmount}
-                            required />
 
                         {/**20 */}
                         <label htmlFor="identification-proof-type">Identification Proof Type</label>
                         <input
                             type="text"
                             name="identification-proof-type"
-                            default={identificationProofType}
+                            defaultValue={identificationProofType}
                             onChange={(e) => setIdentificationProofType(e.target.value)}
                             className="form-control"
                             placeholder="Enter Your Identification Proof Type"
@@ -414,7 +485,7 @@ const RegistrationPage = () => {
                         {/**21 */}
                         <label htmlFor="identification-document-no">Identification Document No </label>
                         <input
-                            default={identificationDocumentNo}
+                            defaultValue={identificationDocumentNo}
                             onChange={(e) => setIdentificationDocumentNo(e.target.value)}
                             className="form-control"
                             type="text"
@@ -425,7 +496,7 @@ const RegistrationPage = () => {
 
                         <label htmlFor="reference-acc-holder-name">Reference Account Holder Name</label>
                         <input
-                            default={referenceAccHolderName}
+                            defaultValue={referenceAccHolderName}
                             onChange={(e) => setReferenceAccHolderName(e.target.value)}
                             className="form-control"
                             type="text"
@@ -434,7 +505,7 @@ const RegistrationPage = () => {
 
                         <label htmlFor="reference-acc-no">Reference Account Holder Account Number</label>
                         <input
-                            default={referenceAccNumber}
+                            defaultValue={referenceAccNumber}
                             onChange={(e) => setReferenceAccNumber(e.target.value)}
                             className="form-control"
                             type="number"
@@ -445,7 +516,7 @@ const RegistrationPage = () => {
 
                         <label htmlFor="reference-acc-address">Reference Account Holder Address</label>
                         <input
-                            default={referenceAccHolderAddress}
+                            defaultValue={referenceAccHolderAddress}
                             onChange={(e) => setReferenceAccHolderAddress(e.target.value)}
                             className="form-control"
                             type="text"
@@ -454,7 +525,7 @@ const RegistrationPage = () => {
                     </Fragment>
                 }
                 <div className="row">
-                    <div className="col-12"><button className="btn btn-success"> Submit</button></div>
+                    <div className="col-12"><button id="submitBtn" className="btn btn-success"> Submit</button></div>
                 </div>
             </form>
 
@@ -463,4 +534,10 @@ const RegistrationPage = () => {
     )
 }
 
-export default RegistrationPage;
+const mapStateToProps = (state) => {
+    return {
+        state: state
+    }
+}
+
+export default connect(mapStateToProps)(RegistrationPage);

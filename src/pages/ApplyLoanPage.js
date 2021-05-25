@@ -1,69 +1,134 @@
 import React, { useState } from 'react'
-
+import PersonalLoan from '../containers/PersonalLoan';
+import EducationLoan from '../containers/EducationLoan';
 const ApplyLoanPage = () => {
 
-    const [loanType,setLoanType] = useState();
-    const [loanAmount,setLoanAmount] = useState();
-    const [loanApplyDate,setLoanApplyDate] = useState();
-    const [rateOfInterest,setRateOfInterest] = useState();
-    const [durationInput,setDurationInput] = useState();
+    const [loanType, setLoanType] = useState("educational");
+    const [loanAmount, setLoanAmount] = useState(10);
+    const [loanApplyDate, setLoanApplyDate] = useState();
+    const [issueDate, setIssueDate] = useState()
+    const [rateOfInterest, setRateOfInterest] = useState(6);
+    const [durationInput, setDurationInput] = useState(5);
+    const [loan, setLoan] = useState();
+
+    const formSubmitHanlder = (e) => {
+        e.preventDefault();
+        let obj={
+            loanType:loanType,
+            loanAmount:loanAmount,
+            loanApplyDate:loanApplyDate,
+            issueDate:issueDate,
+            rateOfInterest:rateOfInterest,
+            durationInput:durationInput,
+            
+
+        }
+        setLoan(obj);
+    }
+
+
     return (
-        <div>
-            <form>
-                <label for="loan-type">Loan Type</label>
-                <select name="loan-type" id="loan-type" onChange={(e)=>setLoanType(e.target.value)}>
-                    <option value='educational' selected={loanType==='educational'}>Eductional</option>
-                    <option value='personal' selected={loanType==='personal'}>Personal</option>
+        <div className="container mt-5 bg-dark text-white">
+            <form className="from-group" onSubmit={formSubmitHanlder}>
+                <br></br>
+                <label htmlFor="loan-type">Loan Type</label>
+                <select name="loan-type" id="loan-type" onChange={(e) => {
+                    setLoanType(e.target.value)
+                    setRateOfInterest(e.target.value === "educational" ? 6 : 12)
+                }
+                }>
+                    <option value='educational' selected={loanType === 'educational'}>Eductional</option>
+                    <option value='personal' selected={loanType === 'personal'}>Personal/Home</option>
                 </select>
-                
-                <input 
-                defaultValue={loanAmount}
-                type="number" placeholder="Loan Amount" required/>
-                
-                <label for="apply-date"></label>
-                <input type="date" defaultValue={loanApplyDate} name="apply-date" id="apply-date"/>
-                
-                <input type="number" 
-                defaultValue={rateOfInterest}
-                name="rate-of-interest" 
-                placeholder="Rate of Interest"  />
+                <br></br>
+                <br></br>
+                <label htmlFor="loanAmount">Loan Amount</label>
+                <input
+                    className="form-control"
+                    defaultValue={loanAmount}
+                    onChange={(e) => { setLoanAmount(e.target.value) }}
+                    type="number"
+                    name="loanAmount"
+                    min="1"
+                    placeholder="Loan Amount" required />
 
-                <input 
-                defaultValue={durationInput}
-                type="number" 
-                name="duration"
-                 placeholder="Duration of the loan"></input>
-                {
-                    loanType==="education" && (
-                        <div>
-                            <input placeholder="Course Fee" required/>
-                            <input placeholder="Course" required/>
-                            <input placeholder="Father's Name" required/>
-                            <input placeholder="Father's Occupation" required/>
-                            <input placeholder="Father's Total Experience" required/>
-                            <input placeholder="Father's Experience in Current Organisation" required/>
-                            <input type="number" placeholder="Ration Card Number" required/>
-                            <input type="number" placeholder="Annual Income" required/>
-                        </div>
-                        )
-                }
-                {
-                     loanTypeRef.current.value==="personal" && (
-                        <div>
-                            <input type="number" placeholder="Annual Income" required/>  
+                <br></br>
+                <label htmlFor="applyDate">Apply Date</label>
+                <input
+                    className="form-control"
+                    type="date"
+                    defaultValue={loanApplyDate}
+                    required
+                    name="applyDate"
+                    id="applyDate"
+                    onChange={(e) => {
 
-                            <input placeholder="Current Organisation" required/>
+                        let curr = new Date();
+                        curr.setDate(curr.getDate() + 1);
+                        let date = curr.toISOString().substr(0, 10);
+                        console.log(new Date(e.target.value).getTime(), " ", new Date(date).getTime());
+                        console.log('diff = ', new Date(e.target.value) - new Date(date).getTime())
+                        if (new Date(e.target.value) - new Date(date).getTime() < 0) {
+                            document.getElementById("dateWarning").style.display = "block";
+                            document.getElementById("dateWarning").style.background = "yellow";
+                            document.getElementById("dateWarning").innerHTML = "Date is Not correct";
+                            document.getElementById("submitBtn").disabled = true;
+                        }
+                        else {
+                            document.getElementById("dateWarning").style.display = "none";
+                            document.getElementById("submitBtn").disabled = false;
+                        }
+                        setLoanApplyDate(e.target.value);
+                    }}
+                />
+                <p className="text-danger" id="dateWarning"></p>
 
-                            <input placeholder="Designation in Current Organisation" required/>
+                <br></br>
+                <br></br>
 
-                            <input placeholder="Father's Total Experience" required/>
+                <label htmlFor="issueDate">Issue Date</label>
+                <input
+                    className="form-control"
+                    type="date"
+                    defaultValue={issueDate}
+                    onChange={(e) => setIssueDate(e.target.value)}
+                    name="issueDate"
+                    id="issueDate" />
+                <br></br>
+                <p className="text-warning">The rate of interest is based on Bank Policy and Loan type</p>
+                <h4>
+                    Rate of Interest :=<i className="text-success">{rateOfInterest}%</i>
+                </h4>
 
-                            <input placeholder="Experience in Current Organisation" required/>
+                <br></br>
+                <label htmlFor="duration">Duration of Loan</label>
+                <select name="duration" id="duration" onChange={(e) => { setDurationInput(e.target.value); }}>
+                    <option value="5" selected={durationInput === '5'}>5</option>
+                    <option value="10" selected={durationInput === '10'}>10</option>
+                    <option value="15" selected={durationInput === '15'}>15</option>
+                    <option value="20" selected={durationInput === '20'}>20</option>
 
-                        </div>
-                        )
-                }
+                </select>
+
+                <br></br>
+                <div className="row justify-content-center">
+                    <div className="col-md-2">
+                    <button id="submitBtn" className="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+                <br></br>
+                <br></br>
             </form>
+            {
+                (loanType === "educational" && loan) && (
+                    <EducationLoan loan={loan}></EducationLoan>
+                )
+            }
+            {
+                (loanType === "personal" && loan) && (
+                    <PersonalLoan loan={loan}></PersonalLoan>
+                )
+            }
         </div>
     )
 }
