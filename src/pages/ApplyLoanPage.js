@@ -11,19 +11,24 @@ const ApplyLoanPage = () => {
     const [durationInput, setDurationInput] = useState(5);
     const [loan, setLoan] = useState();
 
+    const imgStyle = {
+        display: "none"
+    }
+
     const formSubmitHanlder = (e) => {
         e.preventDefault();
-        let obj={
-            loanType:loanType,
-            loanAmount:loanAmount,
-            loanApplyDate:loanApplyDate,
-            issueDate:issueDate,
-            rateOfInterest:rateOfInterest,
-            durationInput:durationInput,
-            
+        let obj = {
+            loanType: loanType,
+            loanAmount: loanAmount,
+            loanApplyDate: loanApplyDate,
+            issueDate: issueDate,
+            rateOfInterest: rateOfInterest,
+            durationInput: durationInput,
+
 
         }
         setLoan(obj);
+        document.getElementById("nextImg").style.display = "block";
     }
 
 
@@ -113,7 +118,8 @@ const ApplyLoanPage = () => {
                 <br></br>
                 <div className="row justify-content-center">
                     <div className="col-md-2">
-                    <button id="submitBtn" className="btn btn-primary">Submit</button>
+                        <button id="submitBtn" className="btn btn-primary">Next</button>
+                        <img width="40" height="90" style={imgStyle} id="nextImg" className="img-responsive" atl="next" src="https://cdn.onlinewebfonts.com/svg/img_71602.png"></img>
                     </div>
                 </div>
                 <br></br>

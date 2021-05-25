@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 const Customer = (props) => {
     let user = props.user;
+    if(!user.email)
+    {
+        return <div className="container bg-dark text-white">
+            <div className="row">
+                <h1>No Customer Found</h1>
+            </div>
+        </div>
+    }
     return (
         <div className="container">
             <div className="row">
@@ -24,7 +32,7 @@ const Customer = (props) => {
                     <strong>Contact :</strong> {user.contact}
                 </div>
                 <div className="col-md-6">
-                    <strong>Account Type : </strong> <i>{user.accountType}</i>
+                   {/*(user.accountType!=='')&& <Fragment><strong>Account Type : </strong> <i>{user.accountType}</i></Fragment>*/}
                 </div>
 
             </div>

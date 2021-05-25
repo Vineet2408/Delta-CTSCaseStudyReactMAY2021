@@ -1,7 +1,8 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {updateUser } from '../store/services/userService';
+
 const UpdateCustomerDetailsPage = (props) => {
 
     const history = useHistory();
@@ -33,7 +34,22 @@ const UpdateCustomerDetailsPage = (props) => {
     const [ageInput, setAgeInput] = useState();
     const [regId, setRegId] = useState();
 
+    useEffect(() => {
+        
+        let arr = props.state.users.users;
+        
+        let regIdCurr ;
 
+        if(props.state.users.loggedInUser)
+        for (let i = 0; i < props.state.users.users.length; i++) {
+            if (arr[i].email === props.state.users.loggedInUser.email) {
+               
+                regIdCurr=arr[i].regId;
+                setRegId(regIdCurr);
+            }
+        }
+      
+    }, []);
 
     let indianStates = ["Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli", "Daman and Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", "Kerala", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Orissa", "Pondicherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Tripura", "Uttaranchal", "Uttar Pradesh", "West Bengal"];
     let spainStates = ["Barcelona", "Madrid", "Sevilla", "Malaga", "Cadiz", "Zaragoza", "Granada", "Valencia", "Cordoba", "Girona", "Almeria", "Toledo"];
@@ -180,12 +196,24 @@ const UpdateCustomerDetailsPage = (props) => {
 
     let currentDate = new Date();
 
+    if(!props.state.users.loggedInUser)
+    {
+        return <div className="container bg-dark text-white">
+            <div className="row">
+                <h1>Login to Update</h1>
+            </div>
+        </div>
+    }
+
     return (
         <div className="container mt-5">
             
             <form onSubmit={formHandler} className="form-group mt-5">
                 {
                     <Fragment>
+                        
+                        <br></br>
+                        <p>Current Id  : {regId}</p>
                         <br></br>
                         <label htmlFor="customerId">Customer Id</label>
                         <input

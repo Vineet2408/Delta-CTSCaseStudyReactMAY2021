@@ -12,6 +12,16 @@ const MenuNavigation = (props) => {
                 <Route path="/logout">
                     <li className="nav-item"><Link className="nav-link" to="/login">Login </Link></li>
                 </Route>
+                <Route exact path="/">
+                    <li className="nav-item"><Link className="nav-link" to="/login">Login </Link></li>
+                </Route>
+                <Route exact path="/login">
+                    <li className="nav-item"><Link className="nav-link" to="/login">Login </Link></li>
+                </Route>
+                <Route exact path="/updateProfile">
+                    <li className="nav-item"><Link className="nav-link" to="/login">Login </Link></li>
+                </Route>
+                updateProfile
                 <Route path="*">
                     <li className="nav-item"><Link className="nav-link" to="/logout">Logout </Link></li>
                 </Route>
