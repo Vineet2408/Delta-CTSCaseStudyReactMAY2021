@@ -190,7 +190,7 @@ const RegistrationPage = (props) => {
     let currentDate = new Date();
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5" data-test="component-registration">
             <p>Registration Id : {regId} </p>
             <form onSubmit={formHandler} className="form-group">
                 {
