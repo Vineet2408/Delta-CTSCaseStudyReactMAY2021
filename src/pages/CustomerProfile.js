@@ -8,48 +8,58 @@ class CustomerProfile extends Component {
     constructor() {
         super();
         this.user = {};
+        this.loans=[];
+        this.state={
+            loans:[]
+        }
     }
-    componentDidMount() {
-        if (this.props.token) {
-            this.props.dispatch(getAllUser(this.props.token));
-            let arr = this.props.users;
-            for (let i = 0; i < arr.length; i++) {
-                let user = arr[i];
-                if (user.email) {
-                    if (user.email === this.props.loggedInUser.email) {
-                        this.user = user;
-                        break;
+    async componentDidMount() {
+        try {
+            if (this.props.token) {
+                await this.props.dispatch(getAllUser(this.props.token));
+                console.log("dispatched");
+                let arr = this.props.users;
+                for (let i = 0; i < arr.length; i++) {
+                    let user = arr[i];
+                    if (user.email) {
+                        if (user.email === this.props.loggedInUser.email) {
+                            this.user = user;
+                            break;
+                        }
                     }
                 }
             }
-        }
-        else {
-            return (
-                <div className="container mt-5">
-                    <h2 className="text-danger">Login Not Succesfull!!</h2>
-                    <button className="btn btn-warning"
-                        onClick={() => { this.props.history.push("/login") }}>
-                        Try Again!
-                    </button>
-                </div>);
+            else {
+                return (
+                    <div className="container mt-5">
+                        <h2 className="text-danger">Login Not Succesfull!!</h2>
+                        <button className="btn btn-warning"
+                            onClick={() => { this.props.history.push("/login") }}>
+                            Try Again!
+                        </button>
+                    </div>);
 
+            }
         }
+        catch (err) {
+            console.log(err.message);
+        }
+        await this.props.dispatch(getAllLoan(this.props.token));
 
-        this.props.dispatch(getAllLoan(this.props.token));
         console.log(this.props.loans)
-        let loanList=[];
-        for(let i=0;i<this.props.loans.length;i++)
-        {
-            if(this.props.loans[i].email===this.props.loggedInUser.email)
-            {
+        let loanList = [];
+        for (let i = 0; i < this.props.loans.length; i++) {
+            if (this.props.loans[i].email === this.props.loggedInUser.email) {
                 loanList.push(this.props.loans[i]);
             }
         }
         this.loans=loanList;
+        this.setState({loans:loanList});
     }
 
     render() {
-        console.log('profile props = ',this.props);
+        console.log('profile props = ', this.props);
+        console.log('state loans = ',this.state.loans);
 
         return (
             <div>

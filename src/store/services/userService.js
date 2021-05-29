@@ -58,14 +58,15 @@ export const getUserById = (userId) => {
 
 export const loginUser = (cred) => {
     console.log(cred);
-    return (dispatch) => {
-        return axios.post(API_URL + "/login", cred)
-            .then(response => {
+    return async (dispatch) => {
+        return await axios.get(API_URL + "/users")
+            .then(async (response) => {
                 console.log(response);
-                console.log(response.data.accessToken);
-                dispatch({
+                console.log(response.data);
+                await dispatch({
                     type: LOGIN_USER,
-                    token: response.data.accessToken,
+                    users:response.data.users,
+                    token: cred.token,
                     loggedInUser: cred
                 })
             })

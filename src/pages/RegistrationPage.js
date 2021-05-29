@@ -161,7 +161,7 @@ const RegistrationPage = (props) => {
 
         console.log(customer);
 
-        props.dispatch(registerUser(customer));
+        await props.dispatch(registerUser(customer));
         history.push('/login');
     }
 
@@ -201,7 +201,7 @@ const RegistrationPage = (props) => {
                             className="form-control"
                             defaultValue={nameInput}
                             placeholder="Enter Your Full Name"
-                            onChange={(e) => setNameInput(e.target.value)}
+                            onChange={async (e) => await setNameInput(e.target.value)}
                             name="fullName"
 
                             required />
@@ -213,7 +213,7 @@ const RegistrationPage = (props) => {
                             className="form-control"
                             defaultValue={emailInput}
                             placeholder="Enter Your Email Address"
-                            onChange={(e) => { setEmailInput(e.target.value) }}
+                            onChange={async (e) => { await setEmailInput(e.target.value) }}
                             name="email"
                             required />
                         <p className="text-danger" id="emailWarning"></p>
@@ -224,7 +224,7 @@ const RegistrationPage = (props) => {
                             name="username"
                             className="form-control"
                             defaultValue={usernameInput}
-                            onChange={(e) => { setUsernameInput(e.target.value) }}
+                            onChange={async (e) => { await setUsernameInput(e.target.value) }}
                             placeholder="Enter Login Name (username)"
                             required />
                         <p className="text-danger" id="usernameWarning"></p>
@@ -235,7 +235,7 @@ const RegistrationPage = (props) => {
                             name="password"
                             className="form-control"
                             defaultValue={passwordInput}
-                            onChange={(e) => setPasswordInput(e.target.value)}
+                            onChange={async (e) => { await setPasswordInput(e.target.value) }}
                             placeholder="Enter Your Password for Login"
                             minLength="8"
                             required />
@@ -249,22 +249,22 @@ const RegistrationPage = (props) => {
                                     name="dob"
                                     defaultValue={dob}
                                     type="date"
-                                    max={currentDate.getTime()}
-                                    onChange={(e) => {
-                                        setDob(e.target.value);
+
+                                    onChange={async (e) => {
+                                        await setDob(e.target.value);
                                         let diff = Date.now() - new Date(e.target.value).getTime();
                                         let ageDiff = new Date(diff);
                                         let yearAge = ageDiff.getUTCFullYear();
                                         let age = Math.abs(yearAge - 1970);
-                                        setAgeInput(age);
+                                        await setAgeInput(age);
                                         if (age < 18) {
-                                             setCitizenshipStatus("Minor");
+                                            await setCitizenshipStatus("Minor");
                                         }
                                         if (age <= 60 && ageInput > 18) {
-                                             setCitizenshipStatus("Normal");
+                                            await setCitizenshipStatus("Normal");
                                         }
                                         if (age > 60) {
-                                             setCitizenshipStatus("Senior");
+                                            await setCitizenshipStatus("Senior");
                                         }
                                     }}
                                     onBlur={checkDate}
@@ -274,7 +274,7 @@ const RegistrationPage = (props) => {
                             <p className="text-danger" id="dobWarning"></p>
                             <div className="col-md-4">
                                 <label htmlFor="gender">Gender</label>{/* gender 11*/}
-                                <select name="gender" id="gender" onChange={(e) => setGender(e.target.value)}>
+                                <select name="gender" id="gender" onChange={async (e) => { await setGender(e.target.value) }}>
                                     <option value="female" selected={(gender === 'female')}>Female</option>
                                     <option value="male" selected={(gender === 'male')}>Male</option>
                                     <option value="other" selected={(gender === 'other')}>Other</option>
@@ -283,7 +283,7 @@ const RegistrationPage = (props) => {
                             </div>
                             <div className="col-md-4">
                                 <label htmlFor="marital-status">Marital Status</label>{/*marital status 12 */}
-                                <select name="marital-status" id="marital-status" onChange={(e) => setMaritalStatus(e.target.value)}>
+                                <select name="marital-status" id="marital-status" onChange={async (e) => { await setMaritalStatus(e.target.value) }}>
                                     <option value="single" selected={(maritalStatus === 'single')}>Single</option>
                                     <option value="married" selected={(maritalStatus === 'married')}>Married</option>
                                     <option value="divorce" selected={(maritalStatus === 'divorce')}>Divorce</option>
@@ -297,7 +297,7 @@ const RegistrationPage = (props) => {
                             type="number"
                             className="form-control"
                             defaultValue={contactInput}
-                            onChange={(e) => { setContactInput(e.target.value) }}
+                            onChange={async (e) => { await setContactInput(e.target.value) }}
                             name="contact"
                             minLength="10"
                             placeholder="Enter Your Contact Number"
@@ -316,7 +316,7 @@ const RegistrationPage = (props) => {
                                 <label htmlFor="guardian-type">Guardian Type</label>
                                 <br></br>
                                 <select name="guardian-type" id="guardian-type"
-                                    onChange={(e) => setGuardianType(e.target.value)}>
+                                    onChange={async (e) => { await setGuardianType(e.target.value) }}>
                                     <option value="local" selected={(guardianType === 'local')}>Option 1</option>
                                     <option value="parental" selected={(guardianType === 'parental')}>Option 2</option>
                                 </select>
@@ -328,7 +328,7 @@ const RegistrationPage = (props) => {
                                 <input type="text"
                                     name="guardian-name"
                                     defaultValue={guardianName}
-                                    onChange={(e) => { setGuardianName(e.target.value) }}
+                                    onChange={async (e) => { await setGuardianName(e.target.value) }}
                                     className="form-control"
                                     placeholder="Enter Your Guardian Name"
                                     required />
@@ -340,7 +340,7 @@ const RegistrationPage = (props) => {
                         <input type="text"
                             name="address"
                             defaultValue={addressInput}
-                            onChange={(e) => setAddressInput(e.target.value)}
+                            onChange={async (e) => { await setAddressInput(e.target.value) }}
                             className="form-control"
                             placeholder="Enter Your Full Address with PinCode"
                             required />
@@ -351,7 +351,7 @@ const RegistrationPage = (props) => {
                             type="text"
                             name="citizenship"
                             defaultValue={citizenshipInput}
-                            onChange={(e) => { setCitizenshipInput(e.target.value) }}
+                            onChange={async (e) => { await setCitizenshipInput(e.target.value) }}
                             className="form-control"
                             placeholder="Enter Your Citizenship"
                             required />
@@ -360,7 +360,7 @@ const RegistrationPage = (props) => {
                             <div className="col-md-6">
                                 <label htmlFor="country-name">Country</label>
                                 {/**9 */}
-                                <select name="country-name" required onChange={(e) => setCountryInput(e.target.value)}>
+                                <select name="country-name" required onChange={async (e) => { await setCountryInput(e.target.value) }}>
                                     <option value="india" selected={(countryInput === 'india')}>India</option>
                                     <option value="spain" selected={(countryInput === 'spain')}>Spain</option>
                                 </select>
@@ -369,18 +369,20 @@ const RegistrationPage = (props) => {
                             <div className="col-md-6">
                                 {/** 8  ,state dropdown based on country */}
                                 <label htmlFor="states">State</label>
-                                <select name="states" id="states" onChange={(e) => setCustomerState(e.target.value)}>
+                                <select name="states" id="states" onChange={async (e) => { await setCustomerState(e.target.value) }}>
 
                                     {
                                         (countryInput === 'india') &&
                                         <Fragment>
-                                            {indianStates.map((state, index) => <option key={index} value={index} selected={(customerState === state)}>{state}</option>)}
+                                            {indianStates.map((state, index) => <option key={index} value={index}
+                                                selected={(customerState === state)}>{state}</option>)}
                                         </Fragment>
                                     }
                                     {
                                         (countryInput === 'spain') &&
                                         <Fragment>
-                                            {spainStates.map((state, index) => <option key={index} value={index} selected={(customerState === state)}>{state}</option>)}
+                                            {spainStates.map((state, index) => <option key={index} value={index}
+                                                selected={(customerState === state)}>{state}</option>)}
                                         </Fragment>
                                     }
                                 </select>
@@ -389,8 +391,8 @@ const RegistrationPage = (props) => {
 
 
                         {/**18  */}
-                       <br></br>
-                       <hr></hr>
+                        <br></br>
+                        <hr></hr>
                     </Fragment>
                 }
 
@@ -404,7 +406,7 @@ const RegistrationPage = (props) => {
                                 <label htmlFor="registration-date">Registration Date</label>
                                 <input
                                     defaultValue={registrationDate}
-                                    onChange={(e) => {
+                                    onChange={async (e) => {
                                         let curr = new Date();
                                         curr.setDate(curr.getDate() + 1);
                                         let date = curr.toISOString().substr(0, 10);
@@ -421,7 +423,7 @@ const RegistrationPage = (props) => {
                                             document.getElementById("submitBtn").disabled = false;
                                         }
 
-                                        setRegistrationDate(e.target.value)
+                                        await setRegistrationDate(e.target.value)
                                     }
                                     }
                                     className="form-control"
@@ -439,15 +441,13 @@ const RegistrationPage = (props) => {
                                 <select name="account-type" id="account-type"
                                     onChange={async (e) => {
                                         await setAccountType(e.target.value);
-                                        if(e.target.value==="savings")
-                                        {
-                                           await setDepositAmount(5000);
+                                        if (e.target.value === "savings") {
+                                            await setDepositAmount(5000);
                                         }
-                                        else
-                                        {
-                                           await setDepositAmount(0);
+                                        else {
+                                            await setDepositAmount(0);
                                         }
-                                        
+
                                     }}>
 
                                     <option value="savings" selected={(accountType === 'savings')}>Savings</option>
@@ -463,7 +463,7 @@ const RegistrationPage = (props) => {
                             type="text"
                             name="branch-name"
                             default={branchNameInput}
-                            onChange={(e) => setBranchName(e.target.value)}
+                            onChange={async (e) =>{await  setBranchName(e.target.value)}}
                             className="form-control"
                             placeholder="Enter Your Branch Name"
                             required />
@@ -476,7 +476,7 @@ const RegistrationPage = (props) => {
                             type="text"
                             name="identification-proof-type"
                             defaultValue={identificationProofType}
-                            onChange={(e) => setIdentificationProofType(e.target.value)}
+                            onChange={async (e) =>{await  setIdentificationProofType(e.target.value)}}
                             className="form-control"
                             placeholder="Enter Your Identification Proof Type"
                             required />
@@ -486,7 +486,7 @@ const RegistrationPage = (props) => {
                         <label htmlFor="identification-document-no">Identification Document No </label>
                         <input
                             defaultValue={identificationDocumentNo}
-                            onChange={(e) => setIdentificationDocumentNo(e.target.value)}
+                            onChange={async(e) =>{ await setIdentificationDocumentNo(e.target.value)}}
                             className="form-control"
                             type="text"
                             placeholder="Identification Document No."
@@ -497,7 +497,7 @@ const RegistrationPage = (props) => {
                         <label htmlFor="reference-acc-holder-name">Reference Account Holder Name</label>
                         <input
                             defaultValue={referenceAccHolderName}
-                            onChange={(e) => setReferenceAccHolderName(e.target.value)}
+                            onChange={async (e) =>{await  setReferenceAccHolderName(e.target.value)}}
                             className="form-control"
                             type="text"
                             placeholder="Enter Reference account holder name"
@@ -506,7 +506,7 @@ const RegistrationPage = (props) => {
                         <label htmlFor="reference-acc-no">Reference Account Holder Account Number</label>
                         <input
                             defaultValue={referenceAccNumber}
-                            onChange={(e) => setReferenceAccNumber(e.target.value)}
+                            onChange={async(e) =>{await  setReferenceAccNumber(e.target.value)}}
                             className="form-control"
                             type="number"
                             placeholder="Enter Reference account holder acc. No."
@@ -517,7 +517,7 @@ const RegistrationPage = (props) => {
                         <label htmlFor="reference-acc-address">Reference Account Holder Address</label>
                         <input
                             defaultValue={referenceAccHolderAddress}
-                            onChange={(e) => setReferenceAccHolderAddress(e.target.value)}
+                            onChange={async (e) =>{await  setReferenceAccHolderAddress(e.target.value)}}
                             className="form-control"
                             type="text"
                             placeholder="Enter Reference account holder address"

@@ -37,9 +37,9 @@ const ApplyLoanPage = () => {
             <form className="from-group" onSubmit={formSubmitHanlder}>
                 <br></br>
                 <label htmlFor="loan-type">Loan Type</label>
-                <select name="loan-type" id="loan-type" onChange={(e) => {
-                    setLoanType(e.target.value)
-                    setRateOfInterest(e.target.value === "educational" ? 6 : 12)
+                <select name="loan-type" id="loan-type" onChange={async (e) => {
+                    await setLoanType(e.target.value)
+                    await setRateOfInterest(e.target.value === "educational" ? 6 : 12)
                 }
                 }>
                     <option value='educational' selected={loanType === 'educational'}>Eductional</option>
@@ -51,7 +51,7 @@ const ApplyLoanPage = () => {
                 <input
                     className="form-control"
                     defaultValue={loanAmount}
-                    onChange={(e) => { setLoanAmount(e.target.value) }}
+                    onChange={async (e) => { await setLoanAmount(e.target.value) }}
                     type="number"
                     name="loanAmount"
                     min="1"
@@ -66,7 +66,7 @@ const ApplyLoanPage = () => {
                     required
                     name="applyDate"
                     id="applyDate"
-                    onChange={(e) => {
+                    onChange={async (e) => {
 
                         let curr = new Date();
                         curr.setDate(curr.getDate() + 1);
@@ -83,7 +83,7 @@ const ApplyLoanPage = () => {
                             document.getElementById("dateWarning").style.display = "none";
                             document.getElementById("submitBtn").disabled = false;
                         }
-                        setLoanApplyDate(e.target.value);
+                        await setLoanApplyDate(e.target.value);
                     }}
                 />
                 <p className="text-danger" id="dateWarning"></p>
@@ -96,7 +96,7 @@ const ApplyLoanPage = () => {
                     className="form-control"
                     type="date"
                     defaultValue={issueDate}
-                    onChange={(e) => setIssueDate(e.target.value)}
+                    onChange={async (e) => await setIssueDate(e.target.value)}
                     name="issueDate"
                     id="issueDate" />
                 <br></br>
@@ -107,7 +107,7 @@ const ApplyLoanPage = () => {
 
                 <br></br>
                 <label htmlFor="duration">Duration of Loan</label>
-                <select name="duration" id="duration" onChange={(e) => { setDurationInput(e.target.value); }}>
+                <select name="duration" id="duration" onChange={async (e) => { await setDurationInput(e.target.value); }}>
                     <option value="5" selected={durationInput === '5'}>5</option>
                     <option value="10" selected={durationInput === '10'}>10</option>
                     <option value="15" selected={durationInput === '15'}>15</option>
@@ -119,7 +119,8 @@ const ApplyLoanPage = () => {
                 <div className="row justify-content-center">
                     <div className="col-md-2">
                         <button id="submitBtn" className="btn btn-primary">Next</button>
-                        <img width="40" height="90" style={imgStyle} id="nextImg" className="img-responsive" atl="next" src="https://cdn.onlinewebfonts.com/svg/img_71602.png"></img>
+                        <img width="40" height="90" style={imgStyle} id="nextImg" className="img-responsive"
+                            atl="next" src="https://cdn.onlinewebfonts.com/svg/img_71602.png"></img>
                     </div>
                 </div>
                 <br></br>

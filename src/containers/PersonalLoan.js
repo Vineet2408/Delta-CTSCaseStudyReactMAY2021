@@ -46,27 +46,27 @@ const PersonalLoan = (props) => {
         <div className="container-fluid">
             <form className="form-group container" onSubmit={submitHandler}>
                 <label htmlFor="companyName"> Company Name</label>
-                <input name="companyName" defaultValue={companyName} onChange={(e) => setCompanyName(e.target.value)}
+                <input name="companyName" defaultValue={companyName} onChange={async (e) =>{await setCompanyName(e.target.value)}}
                     className="form-control" type="text" minLength="2" placeholder="Enter Your Company Name" required />
 
                 <label htmlFor="totalExp"> Total Experience</label>
-                <input name="totalExp" defaultValue={totalExp} onChange={(e) => setTotalExp(e.target.value)}
+                <input name="totalExp" defaultValue={totalExp} onChange={async (e) =>{await setTotalExp(e.target.value)}}
                     className="form-control" type="number" min="1" placeholder="Total Experience (in yrs)"
                     required />
 
                 <label htmlFor="expInCur"> Experience in Current Organisation</label>
-                <input name="expInCur" defaultValue={expInCur} onChange={(e) => setExpInCur(e.target.value)}
+                <input name="expInCur" defaultValue={expInCur} onChange={async (e) =>{await setExpInCur(e.target.value)}}
                     className="form-control" type="number" min="1"
                     placeholder="Experience in Current Organisation (in yrs)" required />
 
                 <label htmlFor="designation"> Designation in Current Organisation</label>
-                <input name="designation" defaultValue={designation} onChange={(e) => setDesignation(e.target.value)}
+                <input name="designation" defaultValue={designation} onChange={async (e) =>{await setDesignation(e.target.value)}}
                     className="form-control" type="text" minLength="2"
                     placeholder="Designation in Current Organisation" required />
 
                 <br></br>
                 <label htmlFor="annualIncome">Annual Income</label>
-                <input name="annualIncome" defaultValue={annualIncome} onChange={(e) => setAnnualIncome(e.target.value)}
+                <input name="annualIncome" defaultValue={annualIncome} onChange={async (e) =>{await setAnnualIncome(e.target.value)}}
                     className="form-control" type="number" min="100" placeholder="Annual Income" required />
 
                 <br></br>

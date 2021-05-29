@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import {updateUser } from '../store/services/userService';
+import { updateUser } from '../store/services/userService';
 
 const UpdateCustomerDetailsPage = (props) => {
 
@@ -34,21 +34,21 @@ const UpdateCustomerDetailsPage = (props) => {
     const [ageInput, setAgeInput] = useState();
     const [regId, setRegId] = useState();
 
-    useEffect(() => {
-        
-        let arr = props.state.users.users;
-        
-        let regIdCurr ;
+    useEffect(async () => {
 
-        if(props.state.users.loggedInUser)
-        for (let i = 0; i < props.state.users.users.length; i++) {
-            if (arr[i].email === props.state.users.loggedInUser.email) {
-               
-                regIdCurr=arr[i].regId;
-                setRegId(regIdCurr);
+        let arr = props.state.users.users;
+
+        let regIdCurr;
+
+        if (props.state.users.loggedInUser)
+            for (let i = 0; i < props.state.users.users.length; i++) {
+                if (arr[i].email === props.state.users.loggedInUser.email) {
+
+                    regIdCurr = arr[i].regId;
+                    await setRegId(regIdCurr);
+                }
             }
-        }
-      
+
     }, []);
 
     let indianStates = ["Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli", "Daman and Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", "Kerala", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Orissa", "Pondicherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Tripura", "Uttaranchal", "Uttar Pradesh", "West Bengal"];
@@ -162,13 +162,13 @@ const UpdateCustomerDetailsPage = (props) => {
         for (let i = 0; i < props.state.users.users.length; i++) {
             if (arr[i].email === props.state.users.loggedInUser.email) {
                 userId = arr[i].id;
-                accountNo=arr[i].accountNo;
+                accountNo = arr[i].accountNo;
             }
         }
-        customer.accountNo=accountNo;
+        customer.accountNo = accountNo;
         console.log(userId);
         let token = props.state.users.token;
-        props.dispatch(updateUser(customer, userId, token));
+        await props.dispatch(updateUser(customer, userId, token));
         history.push('/profile');
     }
 
@@ -196,8 +196,7 @@ const UpdateCustomerDetailsPage = (props) => {
 
     let currentDate = new Date();
 
-    if(!props.state.users.loggedInUser)
-    {
+    if (!props.state.users.loggedInUser) {
         return <div className="container bg-dark text-white">
             <div className="row">
                 <h1>Login to Update</h1>
@@ -207,11 +206,11 @@ const UpdateCustomerDetailsPage = (props) => {
 
     return (
         <div className="container mt-5">
-            
+
             <form onSubmit={formHandler} className="form-group mt-5">
                 {
                     <Fragment>
-                        
+
                         <br></br>
                         <p>Current Id  : {regId}</p>
                         <br></br>
@@ -221,7 +220,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             type="text"
                             defaultValue={regId}
                             placeholder="Enter New Customer Id"
-                            onChange={(e) => setRegId(e.target.value)}
+                            onChange={async (e) => { await setRegId(e.target.value) }}
                             name="customerId"
                             required></input>
                         <br></br>
@@ -231,7 +230,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             className="form-control"
                             defaultValue={nameInput}
                             placeholder="Enter Your Full Name"
-                            onChange={(e) => setNameInput(e.target.value)}
+                            onChange={async (e) => { await setNameInput(e.target.value) }}
                             name="fullName"
 
                             required />
@@ -243,7 +242,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             className="form-control"
                             defaultValue={emailInput}
                             placeholder="Enter Your Email Address"
-                            onChange={(e) => { setEmailInput(e.target.value) }}
+                            onChange={async (e) => { await setEmailInput(e.target.value) }}
                             name="email"
                             required />
                         <p className="text-danger" id="emailWarning"></p>
@@ -254,7 +253,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             name="username"
                             className="form-control"
                             defaultValue={usernameInput}
-                            onChange={(e) => { setUsernameInput(e.target.value) }}
+                            onChange={async (e) => { await setUsernameInput(e.target.value) }}
                             placeholder="Enter Login Name (username)"
                             required />
                         <p className="text-danger" id="usernameWarning"></p>
@@ -265,7 +264,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             name="password"
                             className="form-control"
                             defaultValue={passwordInput}
-                            onChange={(e) => setPasswordInput(e.target.value)}
+                            onChange={async (e) => { await setPasswordInput(e.target.value) }}
                             placeholder="Enter Your Password for Login"
                             minLength="8"
                             required />
@@ -279,25 +278,22 @@ const UpdateCustomerDetailsPage = (props) => {
                                     name="dob"
                                     defaultValue={dob}
                                     type="date"
-                                    max={currentDate.getTime()}
-                                    onChange={(e) => {
-                                        setDob(e.target.value);
+
+                                    onChange={async (e) => {
+                                        await setDob(e.target.value);
                                         let diff = Date.now() - new Date(e.target.value).getTime();
                                         let ageDiff = new Date(diff);
                                         let yearAge = ageDiff.getUTCFullYear();
                                         let age = Math.abs(yearAge - 1970);
-                                        setAgeInput(age);
-                                        if(age<18)
-                                        {
-                                            setCitizenshipStatus("Minor");
+                                        await setAgeInput(age);
+                                        if (age < 18) {
+                                            await setCitizenshipStatus("Minor");
                                         }
-                                        if(age>18 && age<=60)
-                                        {
-                                            setCitizenshipStatus("Normal");
+                                        if (age > 18 && age <= 60) {
+                                            await setCitizenshipStatus("Normal");
                                         }
-                                        if(age>60)
-                                        {
-                                            setCitizenshipStatus("Senior");
+                                        if (age > 60) {
+                                            await setCitizenshipStatus("Senior");
                                         }
                                     }}
                                     onBlur={checkDate}
@@ -307,7 +303,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             <p className="text-danger" id="dobWarning"></p>
                             <div className="col-md-4">
                                 <label htmlFor="gender">Gender</label>{/* gender 11*/}
-                                <select name="gender" id="gender" onChange={(e) => setGender(e.target.value)}>
+                                <select name="gender" id="gender" onChange={async (e) => { await setGender(e.target.value) }}>
                                     <option value="female" selected={(gender === 'female')}>Female</option>
                                     <option value="male" selected={(gender === 'male')}>Male</option>
                                     <option value="other" selected={(gender === 'other')}>Other</option>
@@ -316,7 +312,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             </div>
                             <div className="col-md-4">
                                 <label htmlFor="marital-status">Marital Status</label>{/*marital status 12 */}
-                                <select name="marital-status" id="marital-status" onChange={(e) => setMaritalStatus(e.target.value)}>
+                                <select name="marital-status" id="marital-status" onChange={async (e) => { await setMaritalStatus(e.target.value) }}>
                                     <option value="single" selected={(maritalStatus === 'single')}>Single</option>
                                     <option value="married" selected={(maritalStatus === 'married')}>Married</option>
                                     <option value="divorce" selected={(maritalStatus === 'divorce')}>Divorce</option>
@@ -330,7 +326,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             type="number"
                             className="form-control"
                             defaultValue={contactInput}
-                            onChange={(e) => { setContactInput(e.target.value) }}
+                            onChange={async (e) => { await setContactInput(e.target.value) }}
                             name="contact"
                             minLength="10"
                             placeholder="Enter Your Contact Number"
@@ -349,7 +345,7 @@ const UpdateCustomerDetailsPage = (props) => {
                                 <label htmlFor="guardian-type">Guardian Type</label>
                                 <br></br>
                                 <select name="guardian-type" id="guardian-type"
-                                    onChange={(e) => setGuardianType(e.target.value)}>
+                                    onChange={async (e) => { await setGuardianType(e.target.value) }}>
                                     <option value="local" selected={(guardianType === 'local')}>Option 1</option>
                                     <option value="parental" selected={(guardianType === 'parental')}>Option 2</option>
                                 </select>
@@ -361,7 +357,7 @@ const UpdateCustomerDetailsPage = (props) => {
                                 <input type="text"
                                     name="guardian-name"
                                     defaultValue={guardianName}
-                                    onChange={(e) => { setGuardianName(e.target.value) }}
+                                    onChange={async (e) => { await setGuardianName(e.target.value) }}
                                     className="form-control"
                                     placeholder="Enter Your Guardian Name"
                                     required />
@@ -373,7 +369,7 @@ const UpdateCustomerDetailsPage = (props) => {
                         <input type="text"
                             name="address"
                             defaultValue={addressInput}
-                            onChange={(e) => setAddressInput(e.target.value)}
+                            onChange={async (e) => { await setAddressInput(e.target.value) }}
                             className="form-control"
                             placeholder="Enter Your Full Address with PinCode"
                             required />
@@ -384,7 +380,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             type="text"
                             name="citizenship"
                             defaultValue={citizenshipInput}
-                            onChange={(e) => { setCitizenshipInput(e.target.value) }}
+                            onChange={async (e) => { await setCitizenshipInput(e.target.value) }}
                             className="form-control"
                             placeholder="Enter Your Citizenship"
                             required />
@@ -393,7 +389,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             <div className="col-md-6">
                                 <label htmlFor="country-name">Country</label>
                                 {/**9 */}
-                                <select name="country-name" required onChange={(e) => setCountryInput(e.target.value)}>
+                                <select name="country-name" required onChange={async (e) => { await setCountryInput(e.target.value) }}>
                                     <option value="india" selected={(countryInput === 'india')}>India</option>
                                     <option value="spain" selected={(countryInput === 'spain')}>Spain</option>
                                 </select>
@@ -402,18 +398,20 @@ const UpdateCustomerDetailsPage = (props) => {
                             <div className="col-md-6">
                                 {/** 8  ,state dropdown based on country */}
                                 <label htmlFor="states">State</label>
-                                <select name="states" id="states" onChange={(e) => setCustomerState(e.target.value)}>
+                                <select name="states" id="states" onChange={async (e) => { await setCustomerState(e.target.value) }}>
 
                                     {
                                         (countryInput === 'india') &&
                                         <Fragment>
-                                            {indianStates.map((state, index) => <option key={index} value={index} selected={(customerState === state)}>{state}</option>)}
+                                            {indianStates.map((state, index) => <option key={index} value={index}
+                                                selected={(customerState === state)}>{state}</option>)}
                                         </Fragment>
                                     }
                                     {
                                         (countryInput === 'spain') &&
                                         <Fragment>
-                                            {spainStates.map((state, index) => <option key={index} value={index} selected={(customerState === state)}>{state}</option>)}
+                                            {spainStates.map((state, index) => <option key={index} value={index}
+                                                selected={(customerState === state)}>{state}</option>)}
                                         </Fragment>
                                     }
                                 </select>
@@ -421,7 +419,7 @@ const UpdateCustomerDetailsPage = (props) => {
                         </div>
 
 
-                       
+
                     </Fragment>
                 }
 
@@ -435,7 +433,7 @@ const UpdateCustomerDetailsPage = (props) => {
                                 <label htmlFor="registration-date">Registration Date</label>
                                 <input
                                     defaultValue={registrationDate}
-                                    onChange={(e) => {
+                                    onChange={async (e) => {
                                         let curr = new Date();
                                         curr.setDate(curr.getDate() + 0);
                                         let date = curr.toISOString().substr(0, 10);
@@ -452,7 +450,7 @@ const UpdateCustomerDetailsPage = (props) => {
                                             document.getElementById("submitBtn").disabled = false;
                                         }
 
-                                        setRegistrationDate(e.target.value)
+                                        await setRegistrationDate(e.target.value)
                                     }
                                     }
                                     className="form-control"
@@ -468,17 +466,15 @@ const UpdateCustomerDetailsPage = (props) => {
                                 <label htmlFor="account-type">Account Type</label><br></br>
                                 {/** 16 , account type options=salary/savings*/}
                                 <select name="account-type" id="account-type"
-                                    onChange={(e) => {
-                                        setAccountType(e.target.value);
-                                        if(e.target.value==='savings')
-                                        {
-                                            setDepositAmount(5000);
+                                    onChange={async (e) => {
+                                        await setAccountType(e.target.value);
+                                        if (e.target.value === 'savings') {
+                                            await setDepositAmount(5000);
                                         }
-                                        else
-                                        {
-                                            setDepositAmount(0);
+                                        else {
+                                            await setDepositAmount(0);
                                         }
-                                        
+
                                     }}>
 
                                     <option value="savings" selected={(accountType === 'savings')}>Savings</option>
@@ -494,13 +490,13 @@ const UpdateCustomerDetailsPage = (props) => {
                             type="text"
                             name="branch-name"
                             default={branchNameInput}
-                            onChange={(e) => setBranchName(e.target.value)}
+                            onChange={async (e) =>{await setBranchName(e.target.value)}}
                             className="form-control"
                             placeholder="Enter Your Branch Name"
                             required />
 
                         {/**19 */}{/**set it according to account type */}
-                       
+
 
                         {/**20 */}
                         <label htmlFor="identification-proof-type">Identification Proof Type</label>
@@ -508,7 +504,7 @@ const UpdateCustomerDetailsPage = (props) => {
                             type="text"
                             name="identification-proof-type"
                             defaultValue={identificationProofType}
-                            onChange={(e) => setIdentificationProofType(e.target.value)}
+                            onChange={async (e) =>{await setIdentificationProofType(e.target.value)}}
                             className="form-control"
                             placeholder="Enter Your Identification Proof Type"
                             required />
@@ -518,7 +514,7 @@ const UpdateCustomerDetailsPage = (props) => {
                         <label htmlFor="identification-document-no">Identification Document No </label>
                         <input
                             defaultValue={identificationDocumentNo}
-                            onChange={(e) => setIdentificationDocumentNo(e.target.value)}
+                            onChange={async (e) =>{await setIdentificationDocumentNo(e.target.value)}}
                             className="form-control"
                             type="text"
                             placeholder="Identification Document No."
@@ -529,7 +525,7 @@ const UpdateCustomerDetailsPage = (props) => {
                         <label htmlFor="reference-acc-holder-name">Reference Account Holder Name</label>
                         <input
                             defaultValue={referenceAccHolderName}
-                            onChange={(e) => setReferenceAccHolderName(e.target.value)}
+                            onChange={async (e) =>{ await setReferenceAccHolderName(e.target.value)}}
                             className="form-control"
                             type="text"
                             placeholder="Enter Reference account holder name"
@@ -538,7 +534,7 @@ const UpdateCustomerDetailsPage = (props) => {
                         <label htmlFor="reference-acc-no">Reference Account Holder Account Number</label>
                         <input
                             defaultValue={referenceAccNumber}
-                            onChange={(e) => setReferenceAccNumber(e.target.value)}
+                            onChange={async (e) =>{await  setReferenceAccNumber(e.target.value)}}
                             className="form-control"
                             type="number"
                             placeholder="Enter Reference account holder acc. No."
@@ -549,7 +545,7 @@ const UpdateCustomerDetailsPage = (props) => {
                         <label htmlFor="reference-acc-address">Reference Account Holder Address</label>
                         <input
                             defaultValue={referenceAccHolderAddress}
-                            onChange={(e) => setReferenceAccHolderAddress(e.target.value)}
+                            onChange={async (e) =>{await setReferenceAccHolderAddress(e.target.value)}}
                             className="form-control"
                             type="text"
                             placeholder="Enter Reference account holder address"

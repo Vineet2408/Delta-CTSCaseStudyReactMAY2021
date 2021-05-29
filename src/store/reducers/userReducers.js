@@ -48,6 +48,7 @@ const userReducer = (state=initialState,action)=>{
             
             newState={
                 ...state,
+                users:action.users,
                 token:action.token,
                 loggedInUser:action.loggedInUser
             }
