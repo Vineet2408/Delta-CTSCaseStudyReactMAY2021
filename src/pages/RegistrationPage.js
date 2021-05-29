@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import  { Fragment, useEffect } from 'react'
+import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { registerUser } from '../store/services/userService';
@@ -6,33 +7,33 @@ const RegistrationPage = (props) => {
 
     const history = useHistory();
 
-    const [nameInput, setNameInput] = useState();
-    const [emailInput, setEmailInput] = useState();
-    const [usernameInput, setUsernameInput] = useState();
-    const [passwordInput, setPasswordInput] = useState();
-    const [countryInput, setCountryInput] = useState('india');
-    const [accountType, setAccountType] = useState();
-    const [gender, setGender] = useState();
-    const [dob, setDob] = useState();
-    const [maritalStatus, setMaritalStatus] = useState();
-    const [contactInput, setContactInput] = useState(0)
-    const [guardianType, setGuardianType] = useState();
-    const [guardianName, setGuardianName] = useState();
-    const [customerState, setCustomerState] = useState();
-    const [addressInput, setAddressInput] = useState()
-    const [branchNameInput, setBranchName] = useState()
-    const [citizenshipInput, setCitizenshipInput] = useState()
-    const [citizenshipStatus, setCitizenshipStatus] = useState()
-    const [referenceAccHolderAddress, setReferenceAccHolderAddress] = useState()
-    const [referenceAccNumber, setReferenceAccNumber] = useState()
-    const [referenceAccHolderName, setReferenceAccHolderName] = useState()
-    const [identificationDocumentNo, setIdentificationDocumentNo] = useState()
-    const [identificationProofType, setIdentificationProofType] = useState()
-    const [depositAmount, setDepositAmount] = useState(5000);
-    const [registrationDate, setRegistrationDate] = useState(new Date());
-    const [ageInput, setAgeInput] = useState();
-    const [regId, setRegId] = useState();
-    const [accountNo, setAccountNo] = useState();
+    const [nameInput, setNameInput] = React.useState();
+    const [emailInput, setEmailInput] = React.useState();
+    const [usernameInput, setUsernameInput] = React.useState();
+    const [passwordInput, setPasswordInput] = React.useState();
+    const [countryInput, setCountryInput] = React.useState('india');
+    const [accountType, setAccountType] = React.useState("");
+    const [gender, setGender] = React.useState();
+    const [dob, setDob] = React.useState();
+    const [maritalStatus, setMaritalStatus] = React.useState();
+    const [contactInput, setContactInput] = React.useState(0)
+    const [guardianType, setGuardianType] = React.useState();
+    const [guardianName, setGuardianName] = React.useState();
+    const [customerState, setCustomerState] = React.useState();
+    const [addressInput, setAddressInput] = React.useState()
+    const [branchNameInput, setBranchName] = React.useState()
+    const [citizenshipInput, setCitizenshipInput] = React.useState()
+    const [citizenshipStatus, setCitizenshipStatus] = React.useState()
+    const [referenceAccHolderAddress, setReferenceAccHolderAddress] = React.useState()
+    const [referenceAccNumber, setReferenceAccNumber] = React.useState()
+    const [referenceAccHolderName, setReferenceAccHolderName] = React.useState()
+    const [identificationDocumentNo, setIdentificationDocumentNo] = React.useState()
+    const [identificationProofType, setIdentificationProofType] = React.useState()
+    const [depositAmount, setDepositAmount] =React.useState(5000);
+    const [registrationDate, setRegistrationDate] =React. useState(new Date());
+    const [ageInput, setAgeInput] = React.useState(1);
+    const [regId, setRegId] = React.useState(0);
+    const [accountNo, setAccountNo] = React.useState(0);
 
     const generate = (n) => {
         var add = 1, max = 12 - add;   // 12 is the min safe number Math.random() can generate without it starting to pad the end with zeros.   
@@ -51,6 +52,7 @@ const RegistrationPage = (props) => {
     useEffect(async () => {
         await setRegId(generate(9));
         await setAccountNo(generate(16));
+        await setCountryInput('india');
         console.log('regId : ', regId);
         console.log('account No : ', accountNo);
     }, [])
@@ -438,7 +440,7 @@ const RegistrationPage = (props) => {
                             <div className="col-md-6">
                                 <label htmlFor="account-type">Account Type</label><br></br>
                                 {/** 16 , account type options=salary/savings*/}
-                                <select name="account-type" id="account-type"
+                                <select name="account-type" id="account-type" data-test="account-type"
                                     onChange={async (e) => {
                                         await setAccountType(e.target.value);
                                         if (e.target.value === "savings") {
