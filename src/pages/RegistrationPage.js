@@ -443,6 +443,7 @@ const RegistrationPage = (props) => {
                                 <select name="account-type" id="account-type" data-test="account-type"
                                     onChange={async (e) => {
                                         await setAccountType(e.target.value);
+                                        console.log("account type = ",accountType);
                                         if (e.target.value === "savings") {
                                             await setDepositAmount(5000);
                                         }

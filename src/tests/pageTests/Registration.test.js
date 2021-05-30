@@ -1,4 +1,4 @@
-import Enzyme,{mount, shallow,ShallowWrapper} from  'enzyme';
+import Enzyme,{mount, shallow} from  'enzyme';
 import { findByTestAttr } from '../utils/testUtils';
 import  EnzymeAdapter  from '@wojtekmaj/enzyme-adapter-react-17';
 import RegistrationPage from '../../pages/RegistrationPage';
@@ -38,7 +38,15 @@ test('changing account-Type input will set the state accountType ',()=>{
     accountTypeInput.simulate("change",mockEvent);
 });
 
-test('state initial amount changes when saving accountType changes',()=>{
+test('state initial amount changes when accountType changes',()=>{
+    const setDepositAmount = jest.fn();
+    React.useState = jest.fn(()=>[0,setDepositAmount]);
+    const wrapper = setup();
+    const val = "account-type";
+    const accountTypeInput = findByTestAttr(wrapper,val);
+
+    const mockEvent = {target:{value:5000}};
+    accountTypeInput.simulate("change",mockEvent);
     
 });
 
