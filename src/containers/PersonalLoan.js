@@ -1,86 +1,127 @@
-import React, { useState } from 'react'
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router';
 import { addLoan } from '../store/services/userService';
 
+import React, { Component } from 'react'
 
-const PersonalLoan = (props) => {
+class PersonalLoan extends Component {
 
-    let loan = props.loan;
+    constructor() {
+        super();
+        this.state = {
+            isFormValid : false,
+            pLoan:{}
+        }
+    }
 
-    let history = useHistory();
+    shouldComponentUpdate(nextProp, nextState) {
 
-    const [totalExp, setTotalExp] = useState();
-    const [annualIncome, setAnnualIncome] = useState();
-    const [companyName, setCompanyName] = useState();
-    const [designation, setDesignation] = useState();
-    const [expInCur, setExpInCur] = useState();
+        console.log('nextState = ', nextState);
 
-    const submitHandler = async (e) => {
+        if (nextState.isFormValid === true) {
+            return true;
+        }
+
+        else {
+            return false;
+        }
+
+    }
+
+    async componentDidUpdate() {
+        console.log("iniside componentDiduPDATE");
+        if(this.state.isFormValid===true)
+        {
+            console.log("dispatching");
+            await this.props.dispatch(addLoan(this.state.pLoan, ""));
+            this.props.history.push('/profile');
+        }
+    }
+
+    submitHandler = async (e) => {
 
         e.preventDefault();
-        loan.totalExp = totalExp;
-        loan.annualIncome = annualIncome;
-        loan.companyName = companyName;
-        loan.designation = designation;
-        loan.expInCur = expInCur;
+        let loan = this.props.loan;//send by parent component
 
-        loan.email = props.state.users.loggedInUser.email;
+        loan.totalExp = this.totalExp.value;
+        loan.annualIncome = this.annualIncome.value;
+        loan.companyName = this.companyName.value;
+        loan.designation = this.designation.value;
+        loan.expInCur = this.expInCur.value;
+
+        loan.email = this.props.state.users.loggedInUser.email;
+
         let accountNo;
-        for (let i = 0; i < props.state.users.users.length; i++) {
-            if (props.state.users.users[i].email === props.state.users.loggedInUser.email) {
-                accountNo = props.state.users.users[i].accountNo;
+        for (let i = 0; i < this.props.state.users.users.length; i++) {
+            if (this.props.state.users.users[i].email === this.props.state.users.loggedInUser.email) {
+                accountNo = this.props.state.users.users[i].accountNo;
                 break;
             }
         }
         loan.accountNo = accountNo;
 
         console.log('loan := ', loan);
-        await props.dispatch(addLoan(loan, ""));
+        this.setState({
+            ...this.state,
+            pLoan:loan,
+            isFormValid:true
+        });
+        //await this.props.dispatch(addLoan(loan, ""));
 
-        history.push('/profile');
+        //this.props.history.push('/profile');
 
     }
 
-    return (
-        <div className="container-fluid">
-            <form className="form-group container" onSubmit={submitHandler}>
-                <label htmlFor="companyName"> Company Name</label>
-                <input name="companyName" defaultValue={companyName} onChange={async (e) =>{await setCompanyName(e.target.value)}}
-                    className="form-control" type="text" minLength="2" placeholder="Enter Your Company Name" required />
 
-                <label htmlFor="totalExp"> Total Experience</label>
-                <input name="totalExp" defaultValue={totalExp} onChange={async (e) =>{await setTotalExp(e.target.value)}}
-                    className="form-control" type="number" min="1" placeholder="Total Experience (in yrs)"
-                    required />
+    render() {
 
-                <label htmlFor="expInCur"> Experience in Current Organisation</label>
-                <input name="expInCur" defaultValue={expInCur} onChange={async (e) =>{await setExpInCur(e.target.value)}}
-                    className="form-control" type="number" min="1"
-                    placeholder="Experience in Current Organisation (in yrs)" required />
+        return (
+            <div className="container-fluid">
+                <form className="form-group container" onSubmit={this.submitHandler}>
+                    <label htmlFor="companyName"> Company Name</label>
+                    <input name="companyName"
+                        ref={(input) => { this.companyName = input }}
+                        className="form-control" type="text"
+                        minLength="2" placeholder="Enter Your Company Name" required />
 
-                <label htmlFor="designation"> Designation in Current Organisation</label>
-                <input name="designation" defaultValue={designation} onChange={async (e) =>{await setDesignation(e.target.value)}}
-                    className="form-control" type="text" minLength="2"
-                    placeholder="Designation in Current Organisation" required />
+                    <label htmlFor="totalExp"> Total Experience</label>
+                    <input name="totalExp"
+                        ref={(input) => { this.totalExp = input }}
+                        className="form-control" type="number" min="1"
+                        placeholder="Total Experience (in yrs)"
+                        required />
 
-                <br></br>
-                <label htmlFor="annualIncome">Annual Income</label>
-                <input name="annualIncome" defaultValue={annualIncome} onChange={async (e) =>{await setAnnualIncome(e.target.value)}}
-                    className="form-control" type="number" min="100" placeholder="Annual Income" required />
+                    <label htmlFor="expInCur"> Experience in Current Organisation</label>
+                    <input name="expInCur"
+                        ref={(input) => { this.expInCur = input }}
+                        className="form-control" type="number" min="1"
+                        placeholder="Experience in Current Organisation (in yrs)" required />
 
-                <br></br>
-                <div className="row justify-content-center">
-                    <div className="col-md-2">
-                        <button id="submitBtn" className="btn btn-primary">Submit</button>
+                    <label htmlFor="designation"> Designation in Current Organisation</label>
+                    <input name="designation"
+                        ref={(input) => { this.designation = input }}
+                        className="form-control" type="text" minLength="2"
+                        placeholder="Designation in Current Organisation" required />
+
+                    <br></br>
+                    <label htmlFor="annualIncome">Annual Income</label>
+                    <input name="annualIncome"
+                        ref={(input) => { this.annualIncome = input }}
+                        className="form-control" type="number" min="1000" 
+                        placeholder="Annual Income" required />
+
+                    <br></br>
+                    <div className="row justify-content-center">
+                        <div className="col-md-2">
+                            <button id="submitBtn" className="btn btn-primary">Submit</button>
+                        </div>
                     </div>
-                </div>
-                <br></br>
-                <br></br>
-            </form>
+                    <br></br>
+                    <br></br>
+                </form>
 
-        </div>
-    )
+            </div>
+        )
+    }
 }
 
 const mapStateToProps = (state) => {

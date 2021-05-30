@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import PersonalLoan from '../containers/PersonalLoan';
 import EducationLoan from '../containers/EducationLoan';
+import { useHistory } from 'react-router';
 const ApplyLoanPage = () => {
 
+    const history = useHistory();
     const [loanType, setLoanType] = useState("educational");
     const [loanAmount, setLoanAmount] = useState(10);
     const [loanApplyDate, setLoanApplyDate] = useState();
@@ -133,7 +135,7 @@ const ApplyLoanPage = () => {
             }
             {
                 (loanType === "personal" && loan) && (
-                    <PersonalLoan loan={loan}></PersonalLoan>
+                    <PersonalLoan loan={loan} history={history}></PersonalLoan>
                 )
             }
         </div>

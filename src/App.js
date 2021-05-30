@@ -50,8 +50,8 @@ function App() {
           <Route path="/rs">
             <RegistrationSuccessful></RegistrationSuccessful>
           </Route>
-          <Route path="/applyLoan">
-            <ApplyLoanPage></ApplyLoanPage>
+          <Route path="/applyLoan" render={(history)=>(<ApplyLoanPage history={history}></ApplyLoanPage>)}>
+            
           </Route>
           <Route path="/updateProfile">
             <UpdateCustomerDetailsPage></UpdateCustomerDetailsPage>
